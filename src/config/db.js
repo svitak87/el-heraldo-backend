@@ -1,6 +1,7 @@
 
 import "dotenv/config";
 import { Sequelize } from "sequelize";
+import mysql2 from "mysql2";
 
 const sslOptions = process.env.DB_SSL_CA
   ? {
