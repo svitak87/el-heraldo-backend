@@ -1,6 +1,13 @@
+
 import "dotenv/config";
-import { readFileSync } from "node:fs";
 import { Sequelize } from "sequelize";
+
+const sslOptions = process.env.DB_SSL_CA
+  ? {
+      ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n"),
+      rejectUnauthorized: true,
+    }
+  : undefined;
 
 export const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -11,12 +18,11 @@ export const sequelize = new Sequelize(
     port: Number(process.env.DB_PORT),
     dialect: "mysql",
     logging: false,
-    dialectOptions: {
-      ssl: {
-        ca: readFileSync("C:/Users/Usuario/Desktop/ca.pem", "utf8"),
-        rejectUnauthorized: true,
+    ...(sslOptions && {
+      dialectOptions: {
+        ssl: sslOptions,
       },
-    },
+    }),
   },
 );
 
