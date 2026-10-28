@@ -10,12 +10,25 @@ import { datarouter } from "./src/routes/dataRoute.js";
 
 const app = express();
 
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://cotizadorelheraldo.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Origen no permitido por CORS"));
+    },
     credentials: true,
   }),
 );
+
 
 app.use(express.json());
 app.use(cookieParser());
